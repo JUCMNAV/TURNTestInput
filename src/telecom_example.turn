@@ -69,5 +69,17 @@ map TF #"Terminating Features" {
 parent Agent: startPoint..success, startPoint..reportSuccess, startPoint..busy, failPoint
 }
 
+map TL {
+	start startPoint -> X checkTime -> or {
+		[!TLactive] -> end success.
+		[TLactive] -> timer getPIN {-> deny;} -> or {
+[PINvalid] -> end success.	
+			[!PINvalid] -> ;
+		} -> X deny -> end failPoint.
+	}
+	start enterPIN -> end e. -> trigger getPIN ;
+	parent Agent: startPoint..failPoint, success
+	parent OriginatingUser: enterPIN
 
+}
 	
